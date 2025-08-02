@@ -1,7 +1,7 @@
 /*
 ==================================================================
-          دارة التحكم الأوتوماتيكي بأحمال أنظمة الطاقة الشمسية
-                      الإصدار: 1.0.0
+          دارة التحكم الاوتوماتيكي بأحمال انظمة الطاقة الشمسية
+                      الاصدار: 1.0.0
                   المطور: نظام التحكم الذكي
 ==================================================================
 
@@ -11,7 +11,7 @@
 - مراقبة الشبكة العامة (GPIO 4)
 - تايمرات يومية متعددة لكل مخرج
 - واجهة ويب عربية كاملة
-- حفظ الإعدادات في EEPROM
+- حفظ الاعدادات في EEPROM
 
 ==================================================================
 */
@@ -28,7 +28,7 @@
 #define GRID_SENSOR_PIN 4     // حساس الشبكة العامة
 #define ADC_PIN A0            // مدخل قراءة الجهد
 
-// ================= إعدادات النظام العامة =================
+// ================= اعدادات النظام العامة =================
 #define NUM_SAMPLES 60        // عدد عينات قراءة ADC
 #define EEPROM_SIZE 512       // حجم EEPROM المخصص
 #define MAX_CALIBRATION_POINTS 20  // عدد نقاط المعايرة القصوى
@@ -50,10 +50,10 @@ struct DailyTimer {
   int endMinute;
 };
 
-// ================= هيكل بيانات إعدادات الريلاي =================
+// ================= هيكل بيانات اعدادات الريلاي =================
 struct RelaySettings {
   float onVoltage;          // جهد التشغيل
-  float offVoltage;         // جهد الإيقاف
+  float offVoltage;         // جهد الايقاف
   bool manualOverride;      // التحكم اليدوي
   bool manualState;         // حالة التحكم اليدوي
   DailyTimer timers[3];     // ثلاث تايمرات يومية
@@ -62,7 +62,7 @@ struct RelaySettings {
 // ================= المتغيرات العامة =================
 ESP8266WebServer server(80);
 
-// إعدادات الشبكة
+// اعدادات الشبكة
 String apSSID = "Solar System";
 String apPassword = "";
 bool apPasswordEnabled = false;
@@ -84,7 +84,7 @@ CalibrationPoint calibrationTable[MAX_CALIBRATION_POINTS] = {
 };
 int calibrationPointsCount = 12;
 
-// إعدادات الريلايات
+// اعدادات الريلايات
 RelaySettings relaySettings[2];
 
 // حالة النظام
@@ -96,7 +96,7 @@ bool relay1State = false;
 bool relay2State = false;
 unsigned long lastRelayChange = 0;
 
-// إعدادات النظام
+// اعدادات النظام
 bool systemEnabled = true;
 bool antiChattering = true;
 int relayDelaySeconds = 3;
@@ -193,7 +193,7 @@ bool shouldRelayBeOn(int relayIndex) {
     return false;
   }
   
-  // المحافظة على الحالة الحالية إذا كان الجهد بين القيمتين
+  // المحافظة على الحالة الحالية اذا كان الجهد بين القيمتين
   return (relayIndex == 0) ? relay1State : relay2State;
 }
 
@@ -214,7 +214,7 @@ void updateRelayStates() {
   
   // تطبيق منطق منع التكرار
   if (antiChattering) {
-    // تنفيذ منطق مراقبة الاستقرار هنا إذا لزم الأمر
+    // تنفيذ منطق مراقبة الاستقرار هنا اذا لزم الأمر
   }
   
   // تحديث الريلاي الأول
@@ -222,7 +222,7 @@ void updateRelayStates() {
     relay1State = newRelay1State;
     digitalWrite(RELAY_1_PIN, relay1State ? HIGH : LOW);
     lastRelayChange = currentTime;
-    Serial.println("الريلاي 1: " + String(relay1State ? "تشغيل" : "إيقاف"));
+    Serial.println("الريلاي 1: " + String(relay1State ? "تشغيل" : "ايقاف"));
   }
   
   // تحديث الريلاي الثاني مع تأخير
@@ -230,7 +230,7 @@ void updateRelayStates() {
     relay2State = newRelay2State;
     digitalWrite(RELAY_2_PIN, relay2State ? HIGH : LOW);
     lastRelayChange = currentTime;
-    Serial.println("الريلاي 2: " + String(relay2State ? "تشغيل" : "إيقاف"));
+    Serial.println("الريلاي 2: " + String(relay2State ? "تشغيل" : "ايقاف"));
   }
 }
 
@@ -256,21 +256,21 @@ void updateGridStatus() {
   }
 }
 
-// ================= دوال حفظ واسترجاع الإعدادات =================
+// ================= دوال حفظ واسترجاع الاعدادات =================
 void saveSettings() {
   DynamicJsonDocument doc(1024);
   
-  // حفظ إعدادات AP
+  // حفظ اعدادات AP
   doc["apSSID"] = apSSID;
   doc["apPassword"] = apPassword;
   doc["apPasswordEnabled"] = apPasswordEnabled;
   
-  // حفظ إعدادات النظام
+  // حفظ اعدادات النظام
   doc["systemEnabled"] = systemEnabled;
   doc["antiChattering"] = antiChattering;
   doc["relayDelaySeconds"] = relayDelaySeconds;
   
-  // حفظ إعدادات الريلايات
+  // حفظ اعدادات الريلايات
   JsonArray relays = doc.createNestedArray("relays");
   for (int i = 0; i < 2; i++) {
     JsonObject relay = relays.createNestedObject();
@@ -309,7 +309,7 @@ void saveSettings() {
   EEPROM.write(jsonString.length(), '\0');
   EEPROM.commit();
   
-  Serial.println("تم حفظ الإعدادات");
+  Serial.println("تم حفظ الاعدادات");
 }
 
 void loadSettings() {
@@ -326,7 +326,7 @@ void loadSettings() {
   }
   
   if (jsonString.length() == 0) {
-    Serial.println("لا توجد إعدادات محفوظة، استخدام الإعدادات الافتراضية");
+    Serial.println("لا توجد اعدادات محفوظة، استخدام الاعدادات الافتراضية");
     setDefaultSettings();
     return;
   }
@@ -335,22 +335,22 @@ void loadSettings() {
   DeserializationError error = deserializeJson(doc, jsonString);
   
   if (error) {
-    Serial.println("خطأ في قراءة الإعدادات، استخدام الإعدادات الافتراضية");
+    Serial.println("خطأ في قراءة الاعدادات، استخدام الاعدادات الافتراضية");
     setDefaultSettings();
     return;
   }
   
-  // استرجاع إعدادات AP
+  // استرجاع اعدادات AP
   apSSID = doc["apSSID"] | "Solar System";
   apPassword = doc["apPassword"] | "";
   apPasswordEnabled = doc["apPasswordEnabled"] | false;
   
-  // استرجاع إعدادات النظام
+  // استرجاع اعدادات النظام
   systemEnabled = doc["systemEnabled"] | true;
   antiChattering = doc["antiChattering"] | true;
   relayDelaySeconds = doc["relayDelaySeconds"] | 3;
   
-  // استرجاع إعدادات الريلايات
+  // استرجاع اعدادات الريلايات
   JsonArray relays = doc["relays"];
   for (int i = 0; i < 2 && i < relays.size(); i++) {
     JsonObject relay = relays[i];
@@ -381,11 +381,11 @@ void loadSettings() {
     }
   }
   
-  Serial.println("تم تحميل الإعدادات بنجاح");
+  Serial.println("تم تحميل الاعدادات بنجاح");
 }
 
 void setDefaultSettings() {
-  // إعدادات افتراضية للريلايات
+  // اعدادات افتراضية للريلايات
   for (int i = 0; i < 2; i++) {
     relaySettings[i].onVoltage = 12.0 + i;
     relaySettings[i].offVoltage = 11.0 + i;
@@ -632,12 +632,12 @@ String getHTMLHeader() {
 <body>
     <div class="container">
         <div class="header">
-                         <h1>نظام التحكم بأحمال الطاقة الشمسية</h1>
+            <h1>نظام التحكم بأحمال الطاقة الشمسية</h1>
             <p>التحكم الذكي والمراقبة المتقدمة</p>
         </div>
         <div class="nav">
             <a href="/" class="nav-btn">المراقبة</a>
-            <a href="/settings" class="nav-btn">الإعدادات</a>
+            <a href="/settings" class="nav-btn">الاعدادات</a>
             <a href="/calibration" class="nav-btn">المعايرة</a>
             <a href="/timers" class="nav-btn">التايمرات</a>
             <a href="/system" class="nav-btn">النظام</a>
@@ -662,23 +662,23 @@ void handleRoot() {
   html += R"(
 <div class="status-grid">
     <div class="status-card">
-                 <h3>جهد البطارية</h3>
+        <h3>جهد البطارية</h3>
         <div class="voltage-display" id="voltage">)" + String(currentVoltage, 2) + R"(</div>
         <p>فولت</p>
     </div>
     <div class="status-card">
-                 <h3>الشبكة العامة</h3>
+        <h3>الشبكة العامة</h3>
         <p><strong>الحالة:</strong> <span id="grid-status">)" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</span></p>
         <p><strong>الاستقرار:</strong> <span id="grid-stable">)" + String(gridStable ? "مستقرة" : "غير مستقرة") + R"(</span></p>
     </div>
     <div class="status-card">
-                 <h3>الريلاي الأول</h3>
+        <h3>الريلاي الأول</h3>
         <div class="relay-status )" + String(relay1State ? "relay-on" : "relay-off") + R"(" id="relay1-status">)" + 
         String(relay1State ? "مشغل" : "متوقف") + R"(</div>
         <button onclick="toggleRelay(1)" class="btn btn-primary">تبديل الحالة</button>
     </div>
     <div class="status-card">
-                 <h3>الريلاي الثاني</h3>
+        <h3>الريلاي الثاني</h3>
         <div class="relay-status )" + String(relay2State ? "relay-on" : "relay-off") + R"(" id="relay2-status">)" + 
         String(relay2State ? "مشغل" : "متوقف") + R"(</div>
         <button onclick="toggleRelay(2)" class="btn btn-primary">تبديل الحالة</button>
@@ -693,7 +693,7 @@ void handleRoot() {
             <p><strong>الذاكرة المتاحة:</strong> )" + String(ESP.getFreeHeap()) + R"( بايت</p>
         </div>
         <div>
-            <p><strong>قوة الإشارة:</strong> )" + String(WiFi.RSSI()) + R"( dBm</p>
+            <p><strong>قوة الاشارة:</strong> )" + String(WiFi.RSSI()) + R"( dBm</p>
             <p><strong>عنوان IP:</strong> )" + WiFi.softAPIP().toString() + R"(</p>
         </div>
     </div>
@@ -706,7 +706,7 @@ void handleRoot() {
 
 void handleSettings() {
   if (server.method() == HTTP_POST) {
-    // معالجة تحديث الإعدادات
+    // معالجة تحديث الاعدادات
     for (int i = 0; i < 2; i++) {
       relaySettings[i].onVoltage = server.arg("relay" + String(i+1) + "_on_voltage").toFloat();
       relaySettings[i].offVoltage = server.arg("relay" + String(i+1) + "_off_voltage").toFloat();
@@ -730,7 +730,7 @@ void handleSettings() {
     
     saveSettings();
     
-    // إعادة تشغيل AP إذا تغيرت الإعدادات
+    // اعادة تشغيل AP اذا تغيرت الاعدادات
     WiFi.softAPdisconnect();
     delay(100);
     if (apPasswordEnabled) {
@@ -742,28 +742,28 @@ void handleSettings() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>إعدادات النظام</h2>)";
+  html += R"(<h2>اعدادات النظام</h2>)";
   
   if (server.method() == HTTP_POST) {
-    html += R"(<div class="alert alert-success">تم حفظ الإعدادات بنجاح!</div>)";
+    html += R"(<div class="alert alert-success">تم حفظ الاعدادات بنجاح!</div>)";
   }
   
   html += R"(
 <form method="post">
     <div class="card">
-        <h3>🌐 إعدادات نقطة الوصول</h3>
+        <h3>اعدادات نقطة الوصول</h3>
         <div class="form-group">
             <label>اسم الشبكة (SSID):</label>
             <input type="text" name="ap_ssid" class="form-control" value=")" + apSSID + R"(" required>
         </div>
         <div class="form-group">
-            <label>كلمة المرور (اتركها فارغة لإلغاء الحماية):</label>
+            <label>كلمة المرور (اتركها فارغة لالغاء الحماية):</label>
             <input type="password" name="ap_password" class="form-control" value=")" + apPassword + R"(">
         </div>
     </div>
     
     <div class="card">
-                 <h3>إعدادات عامة للنظام</h3>
+        <h3>اعدادات عامة للنظام</h3>
         <div class="form-group">
             <label>
                 <input type="checkbox" name="system_enabled" )" + String(systemEnabled ? "checked" : "") + R"(> 
@@ -773,7 +773,7 @@ void handleSettings() {
         <div class="form-group">
             <label>
                 <input type="checkbox" name="anti_chattering" )" + String(antiChattering ? "checked" : "") + R"(> 
-                منع تكرار الإقلاع
+                منع تكرار الاقلاع
             </label>
         </div>
         <div class="form-group">
@@ -783,11 +783,11 @@ void handleSettings() {
     </div>
 )";
 
-  // إعدادات الريلايات
+  // اعدادات الريلايات
   for (int i = 0; i < 2; i++) {
     html += R"(
     <div class="card">
-                 <h3>إعدادات الريلاي )" + String(i+1) + R"(</h3>
+        <h3>اعدادات الريلاي )" + String(i+1) + R"(</h3>
         <div class="grid-2">
             <div class="form-group">
                 <label>جهد التشغيل (فولت):</label>
@@ -795,7 +795,7 @@ void handleSettings() {
                        value=")" + String(relaySettings[i].onVoltage, 1) + R"(" required>
             </div>
             <div class="form-group">
-                <label>جهد الإيقاف (فولت):</label>
+                <label>جهد الايقاف (فولت):</label>
                 <input type="number" step="0.1" name="relay)" + String(i+1) + R"(_off_voltage" class="form-control" 
                        value=")" + String(relaySettings[i].offVoltage, 1) + R"(" required>
             </div>
@@ -820,7 +820,7 @@ void handleSettings() {
   
   html += R"(
     <div style="text-align: center; margin: 20px 0;">
-                 <button type="submit" class="btn btn-success">حفظ الإعدادات</button>
+        <button type="submit" class="btn btn-success">حفظ الاعدادات</button>
     </div>
 </form>
 )";
@@ -880,359 +880,7 @@ void handleRelayToggle() {
   }
 }
 
-// ================= صفحة التايمرات =================
-void handleTimers() {
-  if (server.method() == HTTP_POST) {
-    // معالجة تحديث التايمرات
-    for (int relay = 0; relay < 2; relay++) {
-      for (int timer = 0; timer < 3; timer++) {
-        String prefix = "relay" + String(relay+1) + "_timer" + String(timer+1) + "_";
-        
-        relaySettings[relay].timers[timer].enabled = server.hasArg(prefix + "enabled");
-        relaySettings[relay].timers[timer].startHour = server.arg(prefix + "start_hour").toInt();
-        relaySettings[relay].timers[timer].startMinute = server.arg(prefix + "start_minute").toInt();
-        relaySettings[relay].timers[timer].endHour = server.arg(prefix + "end_hour").toInt();
-        relaySettings[relay].timers[timer].endMinute = server.arg(prefix + "end_minute").toInt();
-      }
-    }
-    
-    saveSettings();
-  }
-  
-  String html = getHTMLHeader();
-  
-  html += R"(<h2>إعدادات التايمرات اليومية</h2>)";
-  
-  if (server.method() == HTTP_POST) {
-    html += R"(<div class="alert alert-success">تم حفظ إعدادات التايمرات بنجاح!</div>)";
-  }
-  
-  html += R"(
-<form method="post">
-    <div class="alert alert-info" style="background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;">
-        <strong>ملاحظة:</strong> يمكن تشغيل التايمرات حتى لو لم تكن الشبكة العامة متوفرة أو جهد البطارية منخفض.
-        عند إعادة تشغيل النظام، يتم إيقاف جميع التايمرات حتى بداية دورة جديدة.
-    </div>
-)";
-
-  // التايمرات لكل ريلاي
-  for (int relay = 0; relay < 2; relay++) {
-    html += R"(
-    <div class="card">
-                 <h3>تايمرات الريلاي )" + String(relay+1) + R"(</h3>
-)";
-    
-    for (int timer = 0; timer < 3; timer++) {
-      String prefix = "relay" + String(relay+1) + "_timer" + String(timer+1) + "_";
-      DailyTimer& t = relaySettings[relay].timers[timer];
-      
-      html += R"(
-        <div class="timer-section">
-            <div class="timer-header">
-                <h4>التايمر )" + String(timer+1) + R"(</h4>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name=")" + prefix + R"(enabled" )" + 
-                    String(t.enabled ? "checked" : "") + R"(> 
-                    تفعيل التايمر
-                </label>
-            </div>
-            <div class="grid-4">
-                <div class="form-group">
-                    <label>ساعة البداية:</label>
-                    <input type="number" name=")" + prefix + R"(start_hour" class="form-control" 
-                           value=")" + String(t.startHour) + R"(" min="0" max="23">
-                </div>
-                <div class="form-group">
-                    <label>دقيقة البداية:</label>
-                    <input type="number" name=")" + prefix + R"(start_minute" class="form-control" 
-                           value=")" + String(t.startMinute) + R"(" min="0" max="59">
-                </div>
-                <div class="form-group">
-                    <label>ساعة النهاية:</label>
-                    <input type="number" name=")" + prefix + R"(end_hour" class="form-control" 
-                           value=")" + String(t.endHour) + R"(" min="0" max="23">
-                </div>
-                <div class="form-group">
-                    <label>دقيقة النهاية:</label>
-                    <input type="number" name=")" + prefix + R"(end_minute" class="form-control" 
-                           value=")" + String(t.endMinute) + R"(" min="0" max="59">
-                </div>
-            </div>
-        </div>
-)";
-    }
-    
-    html += R"(</div>)";
-  }
-  
-  html += R"(
-    <div style="text-align: center; margin: 20px 0;">
-                 <button type="submit" class="btn btn-success">حفظ التايمرات</button>
-    </div>
-</form>
-)";
-  
-  html += getHTMLFooter();
-  server.send(200, "text/html", html);
-}
-
-// ================= صفحة المعايرة =================
-void handleCalibration() {
-  if (server.method() == HTTP_POST) {
-    if (server.hasArg("action")) {
-      String action = server.arg("action");
-      
-      if (action == "add_point") {
-        if (calibrationPointsCount < MAX_CALIBRATION_POINTS) {
-          float newADC = server.arg("new_adc").toFloat();
-          float newVoltage = server.arg("new_voltage").toFloat();
-          
-          // إضافة النقطة الجديدة
-          calibrationTable[calibrationPointsCount].adcValue = newADC;
-          calibrationTable[calibrationPointsCount].realVoltage = newVoltage;
-          calibrationPointsCount++;
-          
-          // ترتيب الجدول حسب قيم ADC
-          for (int i = 0; i < calibrationPointsCount - 1; i++) {
-            for (int j = i + 1; j < calibrationPointsCount; j++) {
-              if (calibrationTable[i].adcValue > calibrationTable[j].adcValue) {
-                CalibrationPoint temp = calibrationTable[i];
-                calibrationTable[i] = calibrationTable[j];
-                calibrationTable[j] = temp;
-              }
-            }
-          }
-          
-          saveSettings();
-        }
-      } else if (action == "delete_point") {
-        int pointIndex = server.arg("point_index").toInt();
-        if (pointIndex >= 0 && pointIndex < calibrationPointsCount) {
-          // حذف النقطة
-          for (int i = pointIndex; i < calibrationPointsCount - 1; i++) {
-            calibrationTable[i] = calibrationTable[i + 1];
-          }
-          calibrationPointsCount--;
-          saveSettings();
-        }
-      } else if (action == "reset_default") {
-        // إعادة ضبط جدول المعايرة للقيم الافتراضية
-        calibrationPointsCount = 12;
-        CalibrationPoint defaultTable[12] = {
-          {0.00, 0.0}, {78.0, 5.016}, {102.0, 6.53}, {133.00, 8.40},
-          {147.0, 9.12}, {161.0, 10.04}, {198.0, 12.43}, {240.0, 15.07},
-          {317.0, 19.98}, {368.0, 23.27}, {399.0, 25.16}, {522.0, 32.77}
-        };
-        for (int i = 0; i < 12; i++) {
-          calibrationTable[i] = defaultTable[i];
-        }
-        saveSettings();
-      }
-    }
-  }
-  
-  String html = getHTMLHeader();
-  
-  html += R"(<h2>معايرة قراءة الجهد</h2>)";
-  
-  if (server.method() == HTTP_POST) {
-    html += R"(<div class="alert alert-success">تم تحديث جدول المعايرة بنجاح!</div>)";
-  }
-  
-  // عرض القراءة الحالية
-  float currentADC = takeAverageADCReading();
-  html += R"(
-<div class="card">
-         <h3>القراءة الحالية</h3>
-    <div class="grid-2">
-        <div>
-            <p><strong>قراءة ADC:</strong> )" + String(currentADC, 2) + R"(</p>
-            <p><strong>الجهد المحسوب:</strong> )" + String(currentVoltage, 2) + R"( فولت</p>
-        </div>
-        <div>
-            <p><strong>عدد نقاط المعايرة:</strong> )" + String(calibrationPointsCount) + R"(</p>
-            <p><strong>النطاق:</strong> )" + String(calibrationTable[0].realVoltage, 1) + R"( - )" + 
-            String(calibrationTable[calibrationPointsCount-1].realVoltage, 1) + R"( فولت</p>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-         <h3>إضافة نقطة معايرة جديدة</h3>
-    <form method="post">
-        <input type="hidden" name="action" value="add_point">
-        <div class="grid-2">
-            <div class="form-group">
-                <label>قراءة ADC:</label>
-                <input type="number" step="0.1" name="new_adc" class="form-control" value=")" + String(currentADC, 1) + R"(" required>
-            </div>
-            <div class="form-group">
-                <label>الجهد الحقيقي (فولت):</label>
-                <input type="number" step="0.001" name="new_voltage" class="form-control" required>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">إضافة نقطة</button>
-    </form>
-</div>
-
-<div class="card">
-         <h3>جدول المعايرة الحالي</h3>
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background: #f8f9fa;">
-                    <th style="padding: 10px; border: 1px solid #dee2e6;">الرقم</th>
-                    <th style="padding: 10px; border: 1px solid #dee2e6;">قراءة ADC</th>
-                    <th style="padding: 10px; border: 1px solid #dee2e6;">الجهد الحقيقي</th>
-                    <th style="padding: 10px; border: 1px solid #dee2e6;">إجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-)";
-
-  for (int i = 0; i < calibrationPointsCount; i++) {
-    html += R"(
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">)" + String(i+1) + R"(</td>
-                    <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">)" + String(calibrationTable[i].adcValue, 1) + R"(</td>
-                    <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">)" + String(calibrationTable[i].realVoltage, 3) + R"( V</td>
-                    <td style="padding: 8px; border: 1px solid #dee2e6; text-align: center;">
-                        <form method="post" style="display: inline;">
-                            <input type="hidden" name="action" value="delete_point">
-                            <input type="hidden" name="point_index" value=")" + String(i) + R"(">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد من حذف هذه النقطة؟')">حذف</button>
-                        </form>
-                    </td>
-                </tr>
-)";
-  }
-
-  html += R"(
-            </tbody>
-        </table>
-    </div>
-    
-    <div style="margin-top: 20px; text-align: center;">
-        <form method="post" style="display: inline;">
-            <input type="hidden" name="action" value="reset_default">
-                         <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد من إعادة ضبط جدول المعايرة للقيم الافتراضية؟')">إعادة ضبط افتراضي</button>
-        </form>
-    </div>
-</div>
-)";
-  
-  html += getHTMLFooter();
-  server.send(200, "text/html", html);
-}
-
-// ================= صفحة النظام =================
-void handleSystem() {
-  if (server.method() == HTTP_POST) {
-    String action = server.arg("action");
-    
-    if (action == "restart") {
-      server.send(200, "text/html", "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>إعادة التشغيل</title></head><body style='text-align:center; font-family: Arial;'><h1>جاري إعادة تشغيل النظام...</h1><p>سيتم إعادة التوجيه تلقائياً بعد 10 ثواني</p><script>setTimeout(function(){window.location.href='/';}, 10000);</script></body></html>");
-      delay(1000);
-      ESP.restart();
-    } else if (action == "factory_reset") {
-      // مسح EEPROM
-      for (int i = 0; i < EEPROM_SIZE; i++) {
-        EEPROM.write(i, 0);
-      }
-      EEPROM.commit();
-      
-      server.send(200, "text/html", "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>إعادة ضبط المصنع</title></head><body style='text-align:center; font-family: Arial;'><h1>تم إعادة ضبط المصنع</h1><p>سيتم إعادة تشغيل النظام...</p><script>setTimeout(function(){window.location.href='/';}, 5000);</script></body></html>");
-      delay(1000);
-      ESP.restart();
-    }
-  }
-  
-  String html = getHTMLHeader();
-  
-  html += R"(<h2>إدارة النظام</h2>)";
-  
-  html += R"(
-<div class="card">
-    <h3>معلومات النظام</h3>
-    <div class="grid-2">
-        <div>
-            <p><strong>إصدار ESP8266:</strong> )" + ESP.getCoreVersion() + R"(</p>
-            <p><strong>تردد المعالج:</strong> )" + String(ESP.getCpuFreqMHz()) + R"( MHz</p>
-            <p><strong>حجم Flash:</strong> )" + String(ESP.getFlashChipSize() / 1024) + R"( KB</p>
-            <p><strong>الذاكرة المتاحة:</strong> )" + String(ESP.getFreeHeap()) + R"( بايت</p>
-        </div>
-        <div>
-            <p><strong>وقت التشغيل:</strong> )" + String(millis() / 1000) + R"( ثانية</p>
-            <p><strong>عدد الأجهزة المتصلة:</strong> )" + String(WiFi.softAPgetStationNum()) + R"(</p>
-            <p><strong>قوة الإشارة:</strong> )" + String(WiFi.RSSI()) + R"( dBm</p>
-            <p><strong>عنوان MAC:</strong> )" + WiFi.macAddress() + R"(</p>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-         <h3>حالة النظام الحالية</h3>
-    <div class="grid-2">
-        <div>
-                         <p><strong>تفعيل النظام:</strong> )" + String(systemEnabled ? "مفعل" : "معطل") + R"(</p>
-                         <p><strong>الشبكة العامة:</strong> )" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</p>
-                         <p><strong>استقرار الشبكة:</strong> )" + String(gridStable ? "مستقرة" : "غير مستقرة") + R"(</p>
-        </div>
-        <div>
-                         <p><strong>الريلاي 1:</strong> )" + String(relay1State ? "مشغل" : "متوقف") + R"(</p>
-                         <p><strong>الريلاي 2:</strong> )" + String(relay2State ? "مشغل" : "متوقف") + R"(</p>
-            <p><strong>جهد البطارية:</strong> )" + String(currentVoltage, 2) + R"( فولت</p>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-         <h3>إحصائيات المعايرة</h3>
-    <p><strong>عدد نقاط المعايرة:</strong> )" + String(calibrationPointsCount) + R"(</p>
-    <p><strong>نطاق المعايرة:</strong> )" + String(calibrationTable[0].realVoltage, 1) + R"( - )" + 
-    String(calibrationTable[calibrationPointsCount-1].realVoltage, 1) + R"( فولت</p>
-    <p><strong>دقة القياس:</strong> 0.1 فولت</p>
-</div>
-
-<div class="card">
-         <h3>إجراءات النظام</h3>
-    <div style="text-align: center;">
-        <form method="post" style="display: inline-block; margin: 10px;">
-            <input type="hidden" name="action" value="restart">
-            <button type="submit" class="btn btn-primary" onclick="return confirm('هل أنت متأكد من إعادة تشغيل النظام؟')">
-                                 إعادة تشغيل النظام
-            </button>
-        </form>
-        
-        <form method="post" style="display: inline-block; margin: 10px;">
-            <input type="hidden" name="action" value="factory_reset">
-                         <button type="submit" class="btn btn-danger" onclick="return confirm('تحذير: سيتم حذف جميع الإعدادات والمعايرات! هل أنت متأكد؟')">
-                 إعادة ضبط المصنع
-             </button>
-        </form>
-    </div>
-</div>
-
-<div class="card">
-         <h3>سجل النظام</h3>
-    <div style="background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 5px; font-family: monospace; max-height: 200px; overflow-y: auto;">
-                 <p>نظام التحكم بأحمال الطاقة الشمسية - الإصدار 1.0.0</p>
-                 <p>وقت التشغيل: )" + String(millis() / 1000) + R"( ثانية</p>
-                 <p>جهد البطارية: )" + String(currentVoltage, 2) + R"( فولت</p>
-                 <p>الشبكة العامة: )" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</p>
-                 <p>الريلاي 1: )" + String(relay1State ? "مشغل" : "متوقف") + R"( | الريلاي 2: )" + String(relay2State ? "مشغل" : "متوقف") + R"(</p>
-                 <p>النظام يعمل بشكل طبيعي</p>
-    </div>
-</div>
-)";
-  
-  html += getHTMLFooter();
-  server.send(200, "text/html", html);
-}
-
-// ================= الإعداد الأولي =================
+// ================= الاعداد الاولي =================
 void setup() {
   Serial.begin(115200);
   Serial.println();
@@ -1249,7 +897,7 @@ void setup() {
   digitalWrite(RELAY_1_PIN, LOW);
   digitalWrite(RELAY_2_PIN, LOW);
   
-  // تحميل الإعدادات
+  // تحميل الاعدادات
   loadSettings();
   
   // تهيئة نقطة الوصول
@@ -1271,9 +919,6 @@ void setup() {
   // تهيئة خادم الويب
   server.on("/", handleRoot);
   server.on("/settings", handleSettings);
-  server.on("/timers", handleTimers);
-  server.on("/calibration", handleCalibration);
-  server.on("/system", handleSystem);
   server.on("/api/status", handleAPIStatus);
   server.on("/api/relay/1/toggle", HTTP_POST, handleRelayToggle);
   server.on("/api/relay/2/toggle", HTTP_POST, handleRelayToggle);
