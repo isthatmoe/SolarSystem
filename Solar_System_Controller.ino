@@ -632,7 +632,7 @@ String getHTMLHeader() {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌞 نظام التحكم بأحمال الطاقة الشمسية</h1>
+                         <h1>نظام التحكم بأحمال الطاقة الشمسية</h1>
             <p>التحكم الذكي والمراقبة المتقدمة</p>
         </div>
         <div class="nav">
@@ -662,23 +662,23 @@ void handleRoot() {
   html += R"(
 <div class="status-grid">
     <div class="status-card">
-        <h3>🔋 جهد البطارية</h3>
+                 <h3>جهد البطارية</h3>
         <div class="voltage-display" id="voltage">)" + String(currentVoltage, 2) + R"(</div>
         <p>فولت</p>
     </div>
     <div class="status-card">
-        <h3>⚡ الشبكة العامة</h3>
+                 <h3>الشبكة العامة</h3>
         <p><strong>الحالة:</strong> <span id="grid-status">)" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</span></p>
         <p><strong>الاستقرار:</strong> <span id="grid-stable">)" + String(gridStable ? "مستقرة" : "غير مستقرة") + R"(</span></p>
     </div>
     <div class="status-card">
-        <h3>🔌 الريلاي الأول</h3>
+                 <h3>الريلاي الأول</h3>
         <div class="relay-status )" + String(relay1State ? "relay-on" : "relay-off") + R"(" id="relay1-status">)" + 
         String(relay1State ? "مشغل" : "متوقف") + R"(</div>
         <button onclick="toggleRelay(1)" class="btn btn-primary">تبديل الحالة</button>
     </div>
     <div class="status-card">
-        <h3>🔌 الريلاي الثاني</h3>
+                 <h3>الريلاي الثاني</h3>
         <div class="relay-status )" + String(relay2State ? "relay-on" : "relay-off") + R"(" id="relay2-status">)" + 
         String(relay2State ? "مشغل" : "متوقف") + R"(</div>
         <button onclick="toggleRelay(2)" class="btn btn-primary">تبديل الحالة</button>
@@ -686,7 +686,7 @@ void handleRoot() {
 </div>
 
 <div class="card">
-    <h3>📊 معلومات النظام</h3>
+    <h3>معلومات النظام</h3>
     <div class="grid-2">
         <div>
             <p><strong>وقت التشغيل:</strong> )" + String(millis() / 1000) + R"( ثانية</p>
@@ -742,7 +742,7 @@ void handleSettings() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>⚙️ إعدادات النظام</h2>)";
+  html += R"(<h2>إعدادات النظام</h2>)";
   
   if (server.method() == HTTP_POST) {
     html += R"(<div class="alert alert-success">تم حفظ الإعدادات بنجاح!</div>)";
@@ -763,7 +763,7 @@ void handleSettings() {
     </div>
     
     <div class="card">
-        <h3>⚡ إعدادات عامة للنظام</h3>
+                 <h3>إعدادات عامة للنظام</h3>
         <div class="form-group">
             <label>
                 <input type="checkbox" name="system_enabled" )" + String(systemEnabled ? "checked" : "") + R"(> 
@@ -787,7 +787,7 @@ void handleSettings() {
   for (int i = 0; i < 2; i++) {
     html += R"(
     <div class="card">
-        <h3>🔌 إعدادات الريلاي )" + String(i+1) + R"(</h3>
+                 <h3>إعدادات الريلاي )" + String(i+1) + R"(</h3>
         <div class="grid-2">
             <div class="form-group">
                 <label>جهد التشغيل (فولت):</label>
@@ -820,7 +820,7 @@ void handleSettings() {
   
   html += R"(
     <div style="text-align: center; margin: 20px 0;">
-        <button type="submit" class="btn btn-success">💾 حفظ الإعدادات</button>
+                 <button type="submit" class="btn btn-success">حفظ الإعدادات</button>
     </div>
 </form>
 )";
@@ -901,7 +901,7 @@ void handleTimers() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>⏰ إعدادات التايمرات اليومية</h2>)";
+  html += R"(<h2>إعدادات التايمرات اليومية</h2>)";
   
   if (server.method() == HTTP_POST) {
     html += R"(<div class="alert alert-success">تم حفظ إعدادات التايمرات بنجاح!</div>)";
@@ -919,7 +919,7 @@ void handleTimers() {
   for (int relay = 0; relay < 2; relay++) {
     html += R"(
     <div class="card">
-        <h3>🔌 تايمرات الريلاي )" + String(relay+1) + R"(</h3>
+                 <h3>تايمرات الريلاي )" + String(relay+1) + R"(</h3>
 )";
     
     for (int timer = 0; timer < 3; timer++) {
@@ -969,7 +969,7 @@ void handleTimers() {
   
   html += R"(
     <div style="text-align: center; margin: 20px 0;">
-        <button type="submit" class="btn btn-success">💾 حفظ التايمرات</button>
+                 <button type="submit" class="btn btn-success">حفظ التايمرات</button>
     </div>
 </form>
 )";
@@ -1035,7 +1035,7 @@ void handleCalibration() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>📊 معايرة قراءة الجهد</h2>)";
+  html += R"(<h2>معايرة قراءة الجهد</h2>)";
   
   if (server.method() == HTTP_POST) {
     html += R"(<div class="alert alert-success">تم تحديث جدول المعايرة بنجاح!</div>)";
@@ -1045,7 +1045,7 @@ void handleCalibration() {
   float currentADC = takeAverageADCReading();
   html += R"(
 <div class="card">
-    <h3>📈 القراءة الحالية</h3>
+         <h3>القراءة الحالية</h3>
     <div class="grid-2">
         <div>
             <p><strong>قراءة ADC:</strong> )" + String(currentADC, 2) + R"(</p>
@@ -1060,7 +1060,7 @@ void handleCalibration() {
 </div>
 
 <div class="card">
-    <h3>➕ إضافة نقطة معايرة جديدة</h3>
+         <h3>إضافة نقطة معايرة جديدة</h3>
     <form method="post">
         <input type="hidden" name="action" value="add_point">
         <div class="grid-2">
@@ -1078,7 +1078,7 @@ void handleCalibration() {
 </div>
 
 <div class="card">
-    <h3>📋 جدول المعايرة الحالي</h3>
+         <h3>جدول المعايرة الحالي</h3>
     <div style="overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -1117,7 +1117,7 @@ void handleCalibration() {
     <div style="margin-top: 20px; text-align: center;">
         <form method="post" style="display: inline;">
             <input type="hidden" name="action" value="reset_default">
-            <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد من إعادة ضبط جدول المعايرة للقيم الافتراضية؟')">🔄 إعادة ضبط افتراضي</button>
+                         <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد من إعادة ضبط جدول المعايرة للقيم الافتراضية؟')">إعادة ضبط افتراضي</button>
         </form>
     </div>
 </div>
@@ -1151,11 +1151,11 @@ void handleSystem() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>🔧 إدارة النظام</h2>)";
+  html += R"(<h2>إدارة النظام</h2>)";
   
   html += R"(
 <div class="card">
-    <h3>📊 معلومات النظام</h3>
+    <h3>معلومات النظام</h3>
     <div class="grid-2">
         <div>
             <p><strong>إصدار ESP8266:</strong> )" + ESP.getCoreVersion() + R"(</p>
@@ -1173,23 +1173,23 @@ void handleSystem() {
 </div>
 
 <div class="card">
-    <h3>⚡ حالة النظام الحالية</h3>
+         <h3>حالة النظام الحالية</h3>
     <div class="grid-2">
         <div>
-            <p><strong>تفعيل النظام:</strong> )" + String(systemEnabled ? "✅ مفعل" : "❌ معطل") + R"(</p>
-            <p><strong>الشبكة العامة:</strong> )" + String(gridAvailable ? "✅ متوفرة" : "❌ غير متوفرة") + R"(</p>
-            <p><strong>استقرار الشبكة:</strong> )" + String(gridStable ? "✅ مستقرة" : "❌ غير مستقرة") + R"(</p>
+                         <p><strong>تفعيل النظام:</strong> )" + String(systemEnabled ? "مفعل" : "معطل") + R"(</p>
+                         <p><strong>الشبكة العامة:</strong> )" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</p>
+                         <p><strong>استقرار الشبكة:</strong> )" + String(gridStable ? "مستقرة" : "غير مستقرة") + R"(</p>
         </div>
         <div>
-            <p><strong>الريلاي 1:</strong> )" + String(relay1State ? "🟢 مشغل" : "🔴 متوقف") + R"(</p>
-            <p><strong>الريلاي 2:</strong> )" + String(relay2State ? "🟢 مشغل" : "🔴 متوقف") + R"(</p>
+                         <p><strong>الريلاي 1:</strong> )" + String(relay1State ? "مشغل" : "متوقف") + R"(</p>
+                         <p><strong>الريلاي 2:</strong> )" + String(relay2State ? "مشغل" : "متوقف") + R"(</p>
             <p><strong>جهد البطارية:</strong> )" + String(currentVoltage, 2) + R"( فولت</p>
         </div>
     </div>
 </div>
 
 <div class="card">
-    <h3>📈 إحصائيات المعايرة</h3>
+         <h3>إحصائيات المعايرة</h3>
     <p><strong>عدد نقاط المعايرة:</strong> )" + String(calibrationPointsCount) + R"(</p>
     <p><strong>نطاق المعايرة:</strong> )" + String(calibrationTable[0].realVoltage, 1) + R"( - )" + 
     String(calibrationTable[calibrationPointsCount-1].realVoltage, 1) + R"( فولت</p>
@@ -1197,20 +1197,20 @@ void handleSystem() {
 </div>
 
 <div class="card">
-    <h3>🔄 إجراءات النظام</h3>
+         <h3>إجراءات النظام</h3>
     <div style="text-align: center;">
         <form method="post" style="display: inline-block; margin: 10px;">
             <input type="hidden" name="action" value="restart">
             <button type="submit" class="btn btn-primary" onclick="return confirm('هل أنت متأكد من إعادة تشغيل النظام؟')">
-                🔄 إعادة تشغيل النظام
+                                 إعادة تشغيل النظام
             </button>
         </form>
         
         <form method="post" style="display: inline-block; margin: 10px;">
             <input type="hidden" name="action" value="factory_reset">
-            <button type="submit" class="btn btn-danger" onclick="return confirm('تحذير: سيتم حذف جميع الإعدادات والمعايرات! هل أنت متأكد؟')">
-                ⚠️ إعادة ضبط المصنع
-            </button>
+                         <button type="submit" class="btn btn-danger" onclick="return confirm('تحذير: سيتم حذف جميع الإعدادات والمعايرات! هل أنت متأكد؟')">
+                 إعادة ضبط المصنع
+             </button>
         </form>
     </div>
 </div>
@@ -1221,9 +1221,9 @@ void handleSystem() {
         <p>🌞 نظام التحكم بأحمال الطاقة الشمسية - الإصدار 1.0.0</p>
         <p>📅 وقت التشغيل: )" + String(millis() / 1000) + R"( ثانية</p>
         <p>🔋 جهد البطارية: )" + String(currentVoltage, 2) + R"( فولت</p>
-        <p>⚡ الشبكة العامة: )" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</p>
+                 <p>الشبكة العامة: )" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</p>
         <p>🔌 الريلاي 1: )" + String(relay1State ? "مشغل" : "متوقف") + R"( | الريلاي 2: )" + String(relay2State ? "مشغل" : "متوقف") + R"(</p>
-        <p>✅ النظام يعمل بشكل طبيعي</p>
+                 <p>النظام يعمل بشكل طبيعي</p>
     </div>
 </div>
 )";
@@ -1236,7 +1236,7 @@ void handleSystem() {
 void setup() {
   Serial.begin(115200);
   Serial.println();
-  Serial.println("🌞 بدء تشغيل نظام التحكم بأحمال الطاقة الشمسية");
+  Serial.println("بدء تشغيل نظام التحكم بأحمال الطاقة الشمسية");
   
   // تهيئة EEPROM
   EEPROM.begin(EEPROM_SIZE);
@@ -1281,7 +1281,7 @@ void setup() {
   server.begin();
   Serial.println("خادم الويب جاهز!");
   
-  Serial.println("النظام جاهز للعمل ✅");
+  Serial.println("النظام جاهز للعمل");
 }
 
 // ================= الحلقة الرئيسية =================
