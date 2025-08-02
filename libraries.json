@@ -1,0 +1,148 @@
+{
+  "project": "Solar System Load Controller",
+  "platform": "ESP8266",
+  "ide": "Arduino IDE",
+  "required_libraries": [
+    {
+      "name": "ESP8266WiFi",
+      "version": "Latest",
+      "source": "Built-in with ESP8266 Core",
+      "installation": "Included with ESP8266 board package",
+      "description": "WiFi management for ESP8266"
+    },
+    {
+      "name": "ESP8266WebServer",
+      "version": "Latest", 
+      "source": "Built-in with ESP8266 Core",
+      "installation": "Included with ESP8266 board package",
+      "description": "HTTP web server functionality"
+    },
+    {
+      "name": "EEPROM",
+      "version": "Latest",
+      "source": "Built-in with ESP8266 Core",
+      "installation": "Included with ESP8266 board package", 
+      "description": "EEPROM read/write operations"
+    },
+    {
+      "name": "ArduinoJson",
+      "version": "6.21.3 or later",
+      "source": "Library Manager",
+      "installation": "Tools → Manage Libraries → Search: ArduinoJson",
+      "description": "JSON parsing and creation",
+      "author": "Benoit Blanchon",
+      "required": true
+    }
+  ],
+  "board_package": {
+    "name": "ESP8266 Community",
+    "url": "http://arduino.esp8266.com/stable/package_esp8266com_index.json",
+    "installation_steps": [
+      "Open Arduino IDE",
+      "Go to File → Preferences",
+      "Add the URL to Additional Board Manager URLs",
+      "Go to Tools → Board → Boards Manager",
+      "Search for 'ESP8266'",
+      "Install 'esp8266' by ESP8266 Community"
+    ]
+  },
+  "board_settings": {
+    "board": "NodeMCU 1.0 (ESP-12E Module)",
+    "cpu_frequency": "80 MHz",
+    "flash_size": "4MB (FS:2MB OTA:~1019KB)",
+    "lwip_variant": "v2 Lower Memory",
+    "upload_speed": "921600",
+    "erase_flash": "Only Sketch"
+  },
+  "optional_libraries": [
+    {
+      "name": "Time",
+      "version": "Latest",
+      "source": "Library Manager",
+      "installation": "Tools → Manage Libraries → Search: Time",
+      "description": "Time handling functions",
+      "note": "For advanced time management features"
+    },
+    {
+      "name": "NTPClient",
+      "version": "Latest", 
+      "source": "Library Manager",
+      "installation": "Tools → Manage Libraries → Search: NTPClient",
+      "description": "Network Time Protocol client",
+      "note": "For automatic time synchronization"
+    }
+  ],
+  "installation_guide": {
+    "step_1": {
+      "title": "Install Arduino IDE",
+      "description": "Download and install Arduino IDE from arduino.cc"
+    },
+    "step_2": {
+      "title": "Add ESP8266 Board Package",
+      "description": "Add ESP8266 board support to Arduino IDE",
+      "instructions": [
+        "Open Arduino IDE",
+        "Go to File → Preferences",
+        "In 'Additional Board Manager URLs', add: http://arduino.esp8266.com/stable/package_esp8266com_index.json",
+        "Click OK",
+        "Go to Tools → Board → Boards Manager",
+        "Search for 'ESP8266'", 
+        "Install 'esp8266' by ESP8266 Community (version 3.0.0 or later)"
+      ]
+    },
+    "step_3": {
+      "title": "Install Required Libraries",
+      "description": "Install the ArduinoJson library",
+      "instructions": [
+        "Go to Tools → Manage Libraries",
+        "Search for 'ArduinoJson'",
+        "Install 'ArduinoJson' by Benoit Blanchon (version 6.21.3 or later)",
+        "Click Install"
+      ]
+    },
+    "step_4": {
+      "title": "Configure Board Settings",
+      "description": "Set correct board and upload settings",
+      "instructions": [
+        "Go to Tools → Board → ESP8266 Boards",
+        "Select 'NodeMCU 1.0 (ESP-12E Module)'",
+        "Set CPU Frequency to 80 MHz",
+        "Set Flash Size to '4MB (FS:2MB OTA:~1019KB)'",
+        "Set Upload Speed to 921600",
+        "Select correct Port (usually COM3, COM4, etc. on Windows)"
+      ]
+    }
+  },
+  "troubleshooting": {
+    "compilation_errors": [
+      {
+        "error": "ESP8266WiFi.h: No such file or directory",
+        "solution": "Install ESP8266 board package properly"
+      },
+      {
+        "error": "ArduinoJson.h: No such file or directory", 
+        "solution": "Install ArduinoJson library through Library Manager"
+      },
+      {
+        "error": "Board not found",
+        "solution": "Check board selection and ESP8266 package installation"
+      }
+    ],
+    "upload_errors": [
+      {
+        "error": "Failed to connect to ESP8266",
+        "solution": "Check USB cable, select correct port, press reset button"
+      },
+      {
+        "error": "Port not found",
+        "solution": "Install CP2102 or CH340 USB driver for NodeMCU"
+      }
+    ]
+  },
+  "memory_requirements": {
+    "flash_usage": "~350KB for main program",
+    "ram_usage": "~45KB during operation", 
+    "eeprom_usage": "512 bytes for settings storage",
+    "recommendations": "Use 4MB flash size for optimal performance"
+  }
+}
