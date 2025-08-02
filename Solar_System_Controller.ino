@@ -659,46 +659,47 @@ String getHTMLFooter() {
 void handleRoot() {
   String html = getHTMLHeader();
   
-  html += R"(
-<div class="status-grid">
-    <div class="status-card">
-        <h3>جهد البطارية</h3>
-        <div class="voltage-display" id="voltage">)" + String(currentVoltage, 2) + R"(</div>
-        <p>فولت</p>
-    </div>
-    <div class="status-card">
-        <h3>الشبكة العامة</h3>
-        <p><strong>الحالة:</strong> <span id="grid-status">)" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + R"(</span></p>
-        <p><strong>الاستقرار:</strong> <span id="grid-stable">)" + String(gridStable ? "مستقرة" : "غير مستقرة") + R"(</span></p>
-    </div>
-    <div class="status-card">
-        <h3>الريلاي الأول</h3>
-        <div class="relay-status )" + String(relay1State ? "relay-on" : "relay-off") + R"(" id="relay1-status">)" + 
-        String(relay1State ? "مشغل" : "متوقف") + R"(</div>
-        <button onclick="toggleRelay(1)" class="btn btn-primary">تبديل الحالة</button>
-    </div>
-    <div class="status-card">
-        <h3>الريلاي الثاني</h3>
-        <div class="relay-status )" + String(relay2State ? "relay-on" : "relay-off") + R"(" id="relay2-status">)" + 
-        String(relay2State ? "مشغل" : "متوقف") + R"(</div>
-        <button onclick="toggleRelay(2)" class="btn btn-primary">تبديل الحالة</button>
-    </div>
-</div>
-
-<div class="card">
-    <h3>معلومات النظام</h3>
-    <div class="grid-2">
-        <div>
-            <p><strong>وقت التشغيل:</strong> )" + String(millis() / 1000) + R"( ثانية</p>
-            <p><strong>الذاكرة المتاحة:</strong> )" + String(ESP.getFreeHeap()) + R"( بايت</p>
-        </div>
-        <div>
-            <p><strong>قوة الاشارة:</strong> )" + String(WiFi.RSSI()) + R"( dBm</p>
-            <p><strong>عنوان IP:</strong> )" + WiFi.softAPIP().toString() + R"(</p>
-        </div>
-    </div>
-</div>
-)";
+  html += "<div class=\"status-grid\">";
+  html += "<div class=\"status-card\">";
+  html += "<h3>جهد البطارية</h3>";
+  html += "<div class=\"voltage-display\" id=\"voltage\">" + String(currentVoltage, 2) + "</div>";
+  html += "<p>فولت</p>";
+  html += "</div>";
+  
+  html += "<div class=\"status-card\">";
+  html += "<h3>الشبكة العامة</h3>";
+  html += "<p><strong>الحالة:</strong> <span id=\"grid-status\">" + String(gridAvailable ? "متوفرة" : "غير متوفرة") + "</span></p>";
+  html += "<p><strong>الاستقرار:</strong> <span id=\"grid-stable\">" + String(gridStable ? "مستقرة" : "غير مستقرة") + "</span></p>";
+  html += "</div>";
+  
+  html += "<div class=\"status-card\">";
+  html += "<h3>الريلاي الأول</h3>";
+  html += "<div class=\"relay-status " + String(relay1State ? "relay-on" : "relay-off") + "\" id=\"relay1-status\">";
+  html += String(relay1State ? "مشغل" : "متوقف") + "</div>";
+  html += "<button onclick=\"toggleRelay(1)\" class=\"btn btn-primary\">تبديل الحالة</button>";
+  html += "</div>";
+  
+  html += "<div class=\"status-card\">";
+  html += "<h3>الريلاي الثاني</h3>";
+  html += "<div class=\"relay-status " + String(relay2State ? "relay-on" : "relay-off") + "\" id=\"relay2-status\">";
+  html += String(relay2State ? "مشغل" : "متوقف") + "</div>";
+  html += "<button onclick=\"toggleRelay(2)\" class=\"btn btn-primary\">تبديل الحالة</button>";
+  html += "</div>";
+  html += "</div>";
+  
+  html += "<div class=\"card\">";
+  html += "<h3>معلومات النظام</h3>";
+  html += "<div class=\"grid-2\">";
+  html += "<div>";
+  html += "<p><strong>وقت التشغيل:</strong> " + String(millis() / 1000) + " ثانية</p>";
+  html += "<p><strong>الذاكرة المتاحة:</strong> " + String(ESP.getFreeHeap()) + " بايت</p>";
+  html += "</div>";
+  html += "<div>";
+  html += "<p><strong>قوة الاشارة:</strong> " + String(WiFi.RSSI()) + " dBm</p>";
+  html += "<p><strong>عنوان IP:</strong> " + WiFi.softAPIP().toString() + "</p>";
+  html += "</div>";
+  html += "</div>";
+  html += "</div>";
   
   html += getHTMLFooter();
   server.send(200, "text/html", html);
@@ -742,88 +743,66 @@ void handleSettings() {
   
   String html = getHTMLHeader();
   
-  html += R"(<h2>اعدادات النظام</h2>)";
+  html += "<h2>اعدادات النظام</h2>";
   
   if (server.method() == HTTP_POST) {
-    html += R"(<div class="alert alert-success">تم حفظ الاعدادات بنجاح!</div>)";
+    html += "<div class=\"alert alert-success\">تم حفظ الاعدادات بنجاح!</div>";
   }
   
-  html += R"(
-<form method="post">
-    <div class="card">
-        <h3>اعدادات نقطة الوصول</h3>
-        <div class="form-group">
-            <label>اسم الشبكة (SSID):</label>
-            <input type="text" name="ap_ssid" class="form-control" value=")" + apSSID + R"(" required>
-        </div>
-        <div class="form-group">
-            <label>كلمة المرور (اتركها فارغة لالغاء الحماية):</label>
-            <input type="password" name="ap_password" class="form-control" value=")" + apPassword + R"(">
-        </div>
-    </div>
-    
-    <div class="card">
-        <h3>اعدادات عامة للنظام</h3>
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="system_enabled" )" + String(systemEnabled ? "checked" : "") + R"(> 
-                تفعيل النظام
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="anti_chattering" )" + String(antiChattering ? "checked" : "") + R"(> 
-                منع تكرار الاقلاع
-            </label>
-        </div>
-        <div class="form-group">
-            <label>زمن التأخير بين الريلايات (ثواني):</label>
-            <input type="number" name="relay_delay" class="form-control" value=")" + String(relayDelaySeconds) + R"(" min="1" max="60">
-        </div>
-    </div>
-)";
+  html += "<form method=\"post\">";
+  html += "<div class=\"card\">";
+  html += "<h3>اعدادات نقطة الوصول</h3>";
+  html += "<div class=\"form-group\">";
+  html += "<label>اسم الشبكة (SSID):</label>";
+  html += "<input type=\"text\" name=\"ap_ssid\" class=\"form-control\" value=\"" + apSSID + "\" required>";
+  html += "</div>";
+  html += "<div class=\"form-group\">";
+  html += "<label>كلمة المرور (اتركها فارغة لالغاء الحماية):</label>";
+  html += "<input type=\"password\" name=\"ap_password\" class=\"form-control\" value=\"" + apPassword + "\">";
+  html += "</div>";
+  html += "</div>";
+  
+  html += "<div class=\"card\">";
+  html += "<h3>اعدادات عامة للنظام</h3>";
+  html += "<div class=\"form-group\">";
+  html += "<label><input type=\"checkbox\" name=\"system_enabled\"" + String(systemEnabled ? " checked" : "") + "> تفعيل النظام</label>";
+  html += "</div>";
+  html += "<div class=\"form-group\">";
+  html += "<label><input type=\"checkbox\" name=\"anti_chattering\"" + String(antiChattering ? " checked" : "") + "> منع تكرار الاقلاع</label>";
+  html += "</div>";
+  html += "<div class=\"form-group\">";
+  html += "<label>زمن التأخير بين الريلايات (ثواني):</label>";
+  html += "<input type=\"number\" name=\"relay_delay\" class=\"form-control\" value=\"" + String(relayDelaySeconds) + "\" min=\"1\" max=\"60\">";
+  html += "</div>";
+  html += "</div>";
 
   // اعدادات الريلايات
   for (int i = 0; i < 2; i++) {
-    html += R"(
-    <div class="card">
-        <h3>اعدادات الريلاي )" + String(i+1) + R"(</h3>
-        <div class="grid-2">
-            <div class="form-group">
-                <label>جهد التشغيل (فولت):</label>
-                <input type="number" step="0.1" name="relay)" + String(i+1) + R"(_on_voltage" class="form-control" 
-                       value=")" + String(relaySettings[i].onVoltage, 1) + R"(" required>
-            </div>
-            <div class="form-group">
-                <label>جهد الايقاف (فولت):</label>
-                <input type="number" step="0.1" name="relay)" + String(i+1) + R"(_off_voltage" class="form-control" 
-                       value=")" + String(relaySettings[i].offVoltage, 1) + R"(" required>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="relay)" + String(i+1) + R"(_manual" )" + 
-                String(relaySettings[i].manualOverride ? "checked" : "") + R"(> 
-                التحكم اليدوي
-            </label>
-        </div>
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="relay)" + String(i+1) + R"(_manual_state" )" + 
-                String(relaySettings[i].manualState ? "checked" : "") + R"(> 
-                حالة التحكم اليدوي (مشغل)
-            </label>
-        </div>
-    </div>
-)";
+    html += "<div class=\"card\">";
+    html += "<h3>اعدادات الريلاي " + String(i+1) + "</h3>";
+    html += "<div class=\"grid-2\">";
+    html += "<div class=\"form-group\">";
+    html += "<label>جهد التشغيل (فولت):</label>";
+    html += "<input type=\"number\" step=\"0.1\" name=\"relay" + String(i+1) + "_on_voltage\" class=\"form-control\" value=\"" + String(relaySettings[i].onVoltage, 1) + "\" required>";
+    html += "</div>";
+    html += "<div class=\"form-group\">";
+    html += "<label>جهد الايقاف (فولت):</label>";
+    html += "<input type=\"number\" step=\"0.1\" name=\"relay" + String(i+1) + "_off_voltage\" class=\"form-control\" value=\"" + String(relaySettings[i].offVoltage, 1) + "\" required>";
+    html += "</div>";
+    html += "</div>";
+    html += "<div class=\"form-group\">";
+    html += "<label><input type=\"checkbox\" name=\"relay" + String(i+1) + "_manual\"" + String(relaySettings[i].manualOverride ? " checked" : "") + "> التحكم اليدوي</label>";
+    html += "</div>";
+    html += "<div class=\"form-group\">";
+    html += "<label><input type=\"checkbox\" name=\"relay" + String(i+1) + "_manual_state\"" + String(relaySettings[i].manualState ? " checked" : "") + "> حالة التحكم اليدوي (مشغل)</label>";
+    html += "</div>";
+    html += "</div>";
   }
   
-  html += R"(
-    <div style="text-align: center; margin: 20px 0;">
-        <button type="submit" class="btn btn-success">حفظ الاعدادات</button>
-    </div>
-</form>
-)";
+  html += "<div style=\"text-align: center; margin: 20px 0;\">";
+  html += "<button type=\"submit\" class=\"btn btn-success\">حفظ الاعدادات</button>";
+  html += "</div>";
+  html += "</form>";
   
   html += getHTMLFooter();
   server.send(200, "text/html", html);
@@ -850,7 +829,10 @@ void handleAPIStatus() {
 
 // دالة تبديل حالة الريلاي
 void handleRelayToggle() {
-  int relayNum = server.pathArg(0).toInt();
+  String uri = server.uri();
+  int relayNum = 0;
+  if (uri.indexOf("/api/relay/1/") >= 0) relayNum = 1;
+  else if (uri.indexOf("/api/relay/2/") >= 0) relayNum = 2;
   
   if (relayNum >= 1 && relayNum <= 2) {
     int index = relayNum - 1;
@@ -878,6 +860,268 @@ void handleRelayToggle() {
   } else {
     server.send(400, "application/json", "{\"success\":false,\"error\":\"Invalid relay number\"}");
   }
+}
+
+// دالة صفحة التايمرات
+void handleTimers() {
+  if (server.method() == HTTP_POST) {
+    // معالجة تحديث التايمرات
+    for (int relay = 0; relay < 2; relay++) {
+      for (int timer = 0; timer < 3; timer++) {
+        String prefix = "relay" + String(relay+1) + "_timer" + String(timer+1);
+        relaySettings[relay].timers[timer].enabled = server.hasArg(prefix + "_enabled");
+        relaySettings[relay].timers[timer].startHour = server.arg(prefix + "_start_hour").toInt();
+        relaySettings[relay].timers[timer].startMinute = server.arg(prefix + "_start_minute").toInt();
+        relaySettings[relay].timers[timer].endHour = server.arg(prefix + "_end_hour").toInt();
+        relaySettings[relay].timers[timer].endMinute = server.arg(prefix + "_end_minute").toInt();
+      }
+    }
+    saveSettings();
+  }
+  
+  String html = getHTMLHeader();
+  html += "<h2>اعدادات التايمرات اليومية</h2>";
+  
+  if (server.method() == HTTP_POST) {
+    html += "<div class=\"alert alert-success\">تم حفظ التايمرات بنجاح!</div>";
+  }
+  
+  html += "<form method=\"post\">";
+  
+  for (int relay = 0; relay < 2; relay++) {
+    html += "<div class=\"card\">";
+    html += "<h3>تايمرات الريلاي " + String(relay+1) + "</h3>";
+    
+    for (int timer = 0; timer < 3; timer++) {
+      String prefix = "relay" + String(relay+1) + "_timer" + String(timer+1);
+      html += "<div class=\"timer-section\">";
+      html += "<div class=\"timer-header\">التايمر " + String(timer+1) + "</div>";
+      
+      html += "<label><input type=\"checkbox\" name=\"" + prefix + "_enabled\"";
+      if (relaySettings[relay].timers[timer].enabled) html += " checked";
+      html += "> تفعيل التايمر</label><br><br>";
+      
+      html += "<div class=\"grid-4\">";
+      html += "<div><label>ساعة البداية:</label>";
+      html += "<input type=\"number\" name=\"" + prefix + "_start_hour\" min=\"0\" max=\"23\" value=\"";
+      html += String(relaySettings[relay].timers[timer].startHour) + "\"></div>";
+      
+      html += "<div><label>دقيقة البداية:</label>";
+      html += "<input type=\"number\" name=\"" + prefix + "_start_minute\" min=\"0\" max=\"59\" value=\"";
+      html += String(relaySettings[relay].timers[timer].startMinute) + "\"></div>";
+      
+      html += "<div><label>ساعة النهاية:</label>";
+      html += "<input type=\"number\" name=\"" + prefix + "_end_hour\" min=\"0\" max=\"23\" value=\"";
+      html += String(relaySettings[relay].timers[timer].endHour) + "\"></div>";
+      
+      html += "<div><label>دقيقة النهاية:</label>";
+      html += "<input type=\"number\" name=\"" + prefix + "_end_minute\" min=\"0\" max=\"59\" value=\"";
+      html += String(relaySettings[relay].timers[timer].endMinute) + "\"></div>";
+      html += "</div></div>";
+    }
+    html += "</div>";
+  }
+  
+  html += "<div style=\"text-align: center; margin: 20px 0;\">";
+  html += "<button type=\"submit\" class=\"btn btn-success\">حفظ التايمرات</button>";
+  html += "</div></form>";
+  
+  html += getHTMLFooter();
+  server.send(200, "text/html", html);
+}
+
+// دالة صفحة المعايرة
+void handleCalibration() {
+  if (server.method() == HTTP_POST) {
+    String action = server.arg("action");
+    
+    if (action == "add") {
+      if (calibrationPointsCount < MAX_CALIBRATION_POINTS) {
+        float adc = server.arg("adc_value").toFloat();
+        float voltage = server.arg("real_voltage").toFloat();
+        
+        calibrationTable[calibrationPointsCount].adcValue = adc;
+        calibrationTable[calibrationPointsCount].realVoltage = voltage;
+        calibrationPointsCount++;
+        
+        // ترتيب الجدول تصاعدياً
+        for (int i = 0; i < calibrationPointsCount - 1; i++) {
+          for (int j = i + 1; j < calibrationPointsCount; j++) {
+            if (calibrationTable[i].adcValue > calibrationTable[j].adcValue) {
+              CalibrationPoint temp = calibrationTable[i];
+              calibrationTable[i] = calibrationTable[j];
+              calibrationTable[j] = temp;
+            }
+          }
+        }
+        saveSettings();
+      }
+    } else if (action == "delete") {
+      int index = server.arg("index").toInt();
+      if (index >= 0 && index < calibrationPointsCount) {
+        for (int i = index; i < calibrationPointsCount - 1; i++) {
+          calibrationTable[i] = calibrationTable[i + 1];
+        }
+        calibrationPointsCount--;
+        saveSettings();
+      }
+    } else if (action == "reset") {
+      // إعادة ضبط افتراضي
+      calibrationPointsCount = 12;
+      calibrationTable[0] = {0.00, 0.0};
+      calibrationTable[1] = {78.0, 5.016};
+      calibrationTable[2] = {102.0, 6.53};
+      calibrationTable[3] = {133.00, 8.40};
+      calibrationTable[4] = {147.0, 9.12};
+      calibrationTable[5] = {161.0, 10.04};
+      calibrationTable[6] = {198.0, 12.43};
+      calibrationTable[7] = {240.0, 15.07};
+      calibrationTable[8] = {317.0, 19.98};
+      calibrationTable[9] = {368.0, 23.27};
+      calibrationTable[10] = {399.0, 25.16};
+      calibrationTable[11] = {522.0, 32.77};
+      saveSettings();
+    }
+  }
+  
+  String html = getHTMLHeader();
+  html += "<h2>معايرة قراءة الجهد</h2>";
+  
+  if (server.method() == HTTP_POST) {
+    html += "<div class=\"alert alert-success\">تم تحديث المعايرة بنجاح!</div>";
+  }
+  
+  // القراءة الحالية
+  float currentADC = takeAverageADCReading();
+  html += "<div class=\"card\">";
+  html += "<h3>القراءة الحالية</h3>";
+  html += "<p><strong>قراءة ADC:</strong> " + String(currentADC, 2) + "</p>";
+  html += "<p><strong>الجهد المعاير:</strong> " + String(getCorrectedVoltage(currentADC), 2) + " فولت</p>";
+  html += "</div>";
+  
+  // إضافة نقطة جديدة
+  html += "<div class=\"card\">";
+  html += "<h3>إضافة نقطة معايرة جديدة</h3>";
+  html += "<form method=\"post\">";
+  html += "<input type=\"hidden\" name=\"action\" value=\"add\">";
+  html += "<div class=\"grid-2\">";
+  html += "<div><label>قراءة ADC:</label>";
+  html += "<input type=\"number\" step=\"0.01\" name=\"adc_value\" value=\"" + String(currentADC, 2) + "\" required></div>";
+  html += "<div><label>الجهد الحقيقي (فولت):</label>";
+  html += "<input type=\"number\" step=\"0.01\" name=\"real_voltage\" required></div>";
+  html += "</div>";
+  html += "<button type=\"submit\" class=\"btn btn-success\">إضافة نقطة</button>";
+  html += "</form></div>";
+  
+  // جدول المعايرة
+  html += "<div class=\"card\">";
+  html += "<h3>جدول المعايرة الحالي</h3>";
+  html += "<table style=\"width:100%; border-collapse: collapse;\">";
+  html += "<tr style=\"background: #f8f9fa;\"><th style=\"border: 1px solid #ddd; padding: 10px;\">الرقم</th>";
+  html += "<th style=\"border: 1px solid #ddd; padding: 10px;\">قراءة ADC</th>";
+  html += "<th style=\"border: 1px solid #ddd; padding: 10px;\">الجهد الحقيقي</th>";
+  html += "<th style=\"border: 1px solid #ddd; padding: 10px;\">حذف</th></tr>";
+  
+  for (int i = 0; i < calibrationPointsCount; i++) {
+    html += "<tr><td style=\"border: 1px solid #ddd; padding: 10px; text-align: center;\">" + String(i+1) + "</td>";
+    html += "<td style=\"border: 1px solid #ddd; padding: 10px; text-align: center;\">" + String(calibrationTable[i].adcValue, 2) + "</td>";
+    html += "<td style=\"border: 1px solid #ddd; padding: 10px; text-align: center;\">" + String(calibrationTable[i].realVoltage, 2) + " V</td>";
+    html += "<td style=\"border: 1px solid #ddd; padding: 10px; text-align: center;\">";
+    html += "<form method=\"post\" style=\"margin: 0;\">";
+    html += "<input type=\"hidden\" name=\"action\" value=\"delete\">";
+    html += "<input type=\"hidden\" name=\"index\" value=\"" + String(i) + "\">";
+    html += "<button type=\"submit\" class=\"btn btn-danger\" onclick=\"return confirm('حذف هذه النقطة؟')\">حذف</button>";
+    html += "</form></td></tr>";
+  }
+  html += "</table>";
+  
+  // إعادة ضبط افتراضي
+  html += "<div style=\"margin-top: 20px;\">";
+  html += "<form method=\"post\" style=\"display: inline;\">";
+  html += "<input type=\"hidden\" name=\"action\" value=\"reset\">";
+  html += "<button type=\"submit\" class=\"btn btn-danger\" onclick=\"return confirm('سيتم حذف جميع نقاط المعايرة واستبدالها بالقيم الافتراضية! متأكد؟')\">إعادة ضبط افتراضي</button>";
+  html += "</form></div></div>";
+  
+  html += getHTMLFooter();
+  server.send(200, "text/html", html);
+}
+
+// دالة صفحة إدارة النظام
+void handleSystem() {
+  if (server.method() == HTTP_POST) {
+    String action = server.arg("action");
+    
+    if (action == "restart") {
+      server.send(200, "text/html", "<html><body dir='rtl'><h2>جاري إعادة تشغيل النظام...</h2><script>setTimeout(function(){window.location.href='/';}, 5000);</script></body></html>");
+      delay(1000);
+      ESP.restart();
+    } else if (action == "factory_reset") {
+      // حذف الإعدادات
+      for (int i = 0; i < EEPROM_SIZE; i++) {
+        EEPROM.write(i, 0);
+      }
+      EEPROM.commit();
+      
+      server.send(200, "text/html", "<html><body dir='rtl'><h2>تم حذف جميع الإعدادات. جاري إعادة التشغيل...</h2><script>setTimeout(function(){window.location.href='/';}, 5000);</script></body></html>");
+      delay(1000);
+      ESP.restart();
+    }
+  }
+  
+  String html = getHTMLHeader();
+  html += "<h2>إدارة النظام</h2>";
+  
+  // معلومات النظام
+  html += "<div class=\"card\">";
+  html += "<h3>معلومات النظام</h3>";
+  html += "<div class=\"grid-2\">";
+  html += "<div>";
+  html += "<p><strong>الإصدار:</strong> 1.0.0</p>";
+  html += "<p><strong>وقت التشغيل:</strong> " + String(millis() / 1000) + " ثانية</p>";
+  html += "<p><strong>الذاكرة المتاحة:</strong> " + String(ESP.getFreeHeap()) + " بايت</p>";
+  html += "</div>";
+  html += "<div>";
+  html += "<p><strong>معرف الشريحة:</strong> " + String(ESP.getChipId()) + "</p>";
+  html += "<p><strong>تردد المعالج:</strong> " + String(ESP.getCpuFreqMHz()) + " MHz</p>";
+  html += "<p><strong>حجم الفلاش:</strong> " + String(ESP.getFlashChipSize()) + " بايت</p>";
+  html += "</div></div></div>";
+  
+  // حالة النظام
+  html += "<div class=\"card\">";
+  html += "<h3>حالة النظام الحالية</h3>";
+  html += "<p><strong>النظام:</strong> " + String(systemEnabled ? "مفعل" : "معطل") + "</p>";
+  html += "<p><strong>الشبكة العامة:</strong> " + String(gridAvailable ? "متوفرة" : "غير متوفرة") + "</p>";
+  html += "<p><strong>استقرار الشبكة:</strong> " + String(gridStable ? "مستقرة" : "غير مستقرة") + "</p>";
+  html += "<p><strong>الريلاي 1:</strong> " + String(relay1State ? "مشغل" : "متوقف") + "</p>";
+  html += "<p><strong>الريلاي 2:</strong> " + String(relay2State ? "مشغل" : "متوقف") + "</p>";
+  html += "</div>";
+  
+  // إحصائيات المعايرة
+  html += "<div class=\"card\">";
+  html += "<h3>إحصائيات المعايرة</h3>";
+  html += "<p><strong>عدد نقاط المعايرة:</strong> " + String(calibrationPointsCount) + "</p>";
+  html += "<p><strong>أقل قراءة ADC:</strong> " + String(calibrationTable[0].adcValue, 2) + "</p>";
+  html += "<p><strong>أعلى قراءة ADC:</strong> " + String(calibrationTable[calibrationPointsCount-1].adcValue, 2) + "</p>";
+  html += "</div>";
+  
+  // إجراءات النظام
+  html += "<div class=\"card\">";
+  html += "<h3>إجراءات النظام</h3>";
+  html += "<div style=\"margin: 20px 0;\">";
+  
+  html += "<form method=\"post\" style=\"display: inline; margin: 10px;\">";
+  html += "<input type=\"hidden\" name=\"action\" value=\"restart\">";
+  html += "<button type=\"submit\" class=\"btn btn-primary\" onclick=\"return confirm('إعادة تشغيل النظام؟')\">إعادة تشغيل النظام</button>";
+  html += "</form>";
+  
+  html += "<form method=\"post\" style=\"display: inline; margin: 10px;\">";
+  html += "<input type=\"hidden\" name=\"action\" value=\"factory_reset\">";
+  html += "<button type=\"submit\" class=\"btn btn-danger\" onclick=\"return confirm('تحذير: سيتم حذف جميع الإعدادات والمعايرات! هل أنت متأكد؟')\">إعادة ضبط المصنع</button>";
+  html += "</form>";
+  html += "</div></div>";
+  
+  html += getHTMLFooter();
+  server.send(200, "text/html", html);
 }
 
 // ================= الاعداد الاولي =================
@@ -919,6 +1163,9 @@ void setup() {
   // تهيئة خادم الويب
   server.on("/", handleRoot);
   server.on("/settings", handleSettings);
+  server.on("/timers", handleTimers);
+  server.on("/calibration", handleCalibration);
+  server.on("/system", handleSystem);
   server.on("/api/status", handleAPIStatus);
   server.on("/api/relay/1/toggle", HTTP_POST, handleRelayToggle);
   server.on("/api/relay/2/toggle", HTTP_POST, handleRelayToggle);
